@@ -10,7 +10,7 @@ from flask import (
 )
 from werkzeug.utils import secure_filename
 
-from ..src.user.login import UserCredentials
+from src.user.login import UserCredentials
 
 from .query import (
   get_user_by_image_hash, get_user_by_openid, update_user_credentials,
