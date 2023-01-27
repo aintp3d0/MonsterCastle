@@ -3,8 +3,13 @@
 
 from flask import Flask
 
-from ui.app import app, sqldb
+from ui.app import app, sqldb, login_manager
 from ui.views import monster_castle
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return 1
 
 
 if __name__ == '__main__':
