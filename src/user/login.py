@@ -20,7 +20,7 @@ class UserCredentials:
   def __init__(self, image_path: str):
     self.image_path = image_path
 
-  def get_username_and_openid(self) -> Tuple[numpy.ndarray, numpy.ndarray]:
+  def get_username_and_openid(self) -> Optional[Tuple[numpy.ndarray, numpy.ndarray]]:
     image_gray = load_image_as_gray(self.image_path)
     image_container = get_image_container(image_gray)
 
@@ -64,6 +64,9 @@ class UserCredentials:
         open_id = rect
         break
 
+    if user_name is None:
+      return user_name
+
     x, y, w, h = user_name
     image_user_name = image_container[y:y+h, x:x+w]
 
@@ -86,9 +89,16 @@ class UserCredentials:
 
 def _test():
   from helper import show_image
+
   image_path = os.path.join('static', 'test.jpg')
+
   uc = UserCredentials(image_path)
-  image_username, image_openid = uc.get_username_and_openid()
+  uao = uc.get_username_and_openid()
+  if uao is None:
+    print('Invalid user credentials')
+    return None
+
+  image_username, image_openid = uao
   show_image(image_username)
   show_image(image_openid)
   text_openid = uc.validate_image_openid(image_openid)

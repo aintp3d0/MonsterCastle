@@ -69,7 +69,12 @@ def validate_user_credentials(file) -> Dict[str, Union[int, str]]:
   file_extension = os.path.splitext(file.filename)[-1]
 
   uc = UserCredentials(file_path)
-  image_username, image_openid = uc.get_username_and_openid()
+  uao = uc.get_username_and_openid()
+  if uao is None:
+    # TODO: add error codes and descriptions
+    return {'error': 2, 'message': 'Invalid User credentials'}
+
+  image_username, image_openid = uao
   text_openid = uc.validate_image_openid(image_openid)
 
   def remove_exist(file_path: str):
