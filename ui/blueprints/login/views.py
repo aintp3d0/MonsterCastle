@@ -19,16 +19,16 @@ from .query import (
 from .forms import MC_User_Form
 
 
-monster_castle = Blueprint(
-  'monster_castle', __name__,
-  template_folder='templates/monster_castle',
-  static_folder='static/monster_castle'
+mc_login = Blueprint(
+  'mc_login', __name__,
+  template_folder='templates',
+  static_folder='static'
 )
 
 
 MC_USER_LOGIN_FLAG = 'MC_USER'
 MC_USER_IMAGE_FOLDER = os.path.join(
-  monster_castle.static_folder,
+  mc_login.static_folder,
   'images', 'users'
 )
 
@@ -117,12 +117,12 @@ def validate_user_credentials(file) -> Dict[str, Union[int, str]]:
   return {'image_hash': image_hash, 'openid': text_openid}
 
 
-@monster_castle.route('/login', methods=['GET', 'POST'])
+@mc_login.route('/login', methods=['GET', 'POST'])
 def login():
   """Simple login page with mc_user image
   """
   if logged_in():
-    return redirect(url_for('monster_castle.index'))
+    return redirect(url_for('mc_login.index'))
 
   form = MC_User_Form(meta={'csrf': False})
 
@@ -132,31 +132,31 @@ def login():
     if validation_status.get('error') is None:
       session[MC_USER_LOGIN_FLAG] = validation_status.get('image_hash')
       update_user_credentials(validation_status)
-      return redirect(url_for('monster_castle.index'))
+      return redirect(url_for('mc_login.index'))
 
   return render_template('login.html', form=form)
 
 
-@monster_castle.route('/logout', methods=['GET'])
+@mc_login.route('/logout', methods=['GET'])
 def logout():
   if logged_in():
     del session[MC_USER_LOGIN_FLAG]
 
-  return redirect(url_for('monster_castle.login'))
+  return redirect(url_for('mc_login.login'))
 
 
-@monster_castle.route('/')
+@mc_login.route('/')
 def index():
   """
   Registered Users    (accounts)
   Registered Guilds   ()
   """
   if not logged_in():
-    return redirect(url_for('monster_castle.login'))
+    return redirect(url_for('mc_login.login'))
 
   return render_template('index.html')
 
 
-@monster_castle.route('/guild')
+@mc_login.route('/guild')
 def guild():
   return f"<h1>guild:: {get_all_users()}</h1>"

@@ -1,4 +1,4 @@
-from ui.app import sqldb
+from ui.blueprints.app import sqldb
 
 
 class MC_User(sqldb.Model):
