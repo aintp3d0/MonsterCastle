@@ -1,4 +1,20 @@
-from .models import sqldb, MC_User
+from typing import Optional
+
+import sqlalchemy as sa
+
+from .models import sqldb, User
+
+
+class UserQuery:
+
+  @staticmethod
+  def create(name: str, token: str) -> None:
+    sqldb.session.add(User(name=name, token=token))
+    sqldb.session.commit()
+
+  @staticmethod
+  def get(token: str) -> Optional[User]:
+    return User.query.filter_by(token=token).first()
 
 
 def get_user_by_image_hash(image_hash: str):

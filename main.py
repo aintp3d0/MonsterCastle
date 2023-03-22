@@ -4,7 +4,7 @@
 from flask import Flask
 
 from ui.blueprints.app import app, sqldb, login_manager
-from ui.blueprints.login.views import mc_login
+from ui.blueprints.auth.views import auth
 
 
 @login_manager.user_loader
@@ -14,7 +14,7 @@ def load_user(user_id):
 
 if __name__ == '__main__':
   with app.app_context():
-    app.register_blueprint(mc_login)
+    app.register_blueprint(auth)
 
     sqldb.create_all()
     sqldb.session.commit()
